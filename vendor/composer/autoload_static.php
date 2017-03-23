@@ -18,6 +18,8 @@ class ComposerStaticInitf2a0f27ece5f9fa9b4805ebd3d34b414
         'y' => 
         array (
             'yii\\swiftmailer\\' => 16,
+            'yii\\mustache\\' => 13,
+            'yii\\jui\\' => 8,
             'yii\\gii\\' => 8,
             'yii\\faker\\' => 10,
             'yii\\debug\\' => 10,
@@ -28,6 +30,11 @@ class ComposerStaticInitf2a0f27ece5f9fa9b4805ebd3d34b414
         'p' => 
         array (
             'phpDocumentor\\Reflection\\' => 25,
+        ),
+        'k' => 
+        array (
+            'kartik\\datetime\\' => 16,
+            'kartik\\base\\' => 12,
         ),
         'c' => 
         array (
@@ -79,6 +86,14 @@ class ComposerStaticInitf2a0f27ece5f9fa9b4805ebd3d34b414
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-swiftmailer',
         ),
+        'yii\\mustache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cedx/yii2-mustache/lib',
+        ),
+        'yii\\jui\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-jui',
+        ),
         'yii\\gii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-gii',
@@ -108,6 +123,14 @@ class ComposerStaticInitf2a0f27ece5f9fa9b4805ebd3d34b414
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+        ),
+        'kartik\\datetime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-datetimepicker',
+        ),
+        'kartik\\base\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-krajee-base',
         ),
         'cebe\\markdown\\' => 
         array (
@@ -193,6 +216,13 @@ class ComposerStaticInitf2a0f27ece5f9fa9b4805ebd3d34b414
             'Prophecy\\' => 
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
+            ),
+        ),
+        'M' => 
+        array (
+            'Mustache' => 
+            array (
+                0 => __DIR__ . '/..' . '/mustache/mustache/src',
             ),
         ),
         'H' => 

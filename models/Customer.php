@@ -26,6 +26,7 @@ class Customer extends ActiveRecord implements IdentityInterface
             ['auth_key', 'string', 'max' => 255],
             ['password_repeat', 'compare', 'compareAttribute'=>'password'],
             ['password_repeat', 'safe'],
+            ['role', 'in', 'range' => array('user','admin')],
         ];
     }
 
@@ -66,7 +67,7 @@ class Customer extends ActiveRecord implements IdentityInterface
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('You сап only login Ьу username/password pair for now.');
+        throw new NotSupportedException('You саn only login by username/password pair for now.');
     }
 
     public static function findByEmail($email)

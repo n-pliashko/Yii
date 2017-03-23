@@ -18,6 +18,10 @@ $config = [
             'identityClass' => 'app\models\Customer',
             'enableAutoLogin' => true,
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+            'defaultRoles' => ['guest'],
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -44,6 +48,12 @@ $config = [
             'rules' => [
             ],
         ],
+        'view' => [
+            'class' => 'yii\web\View',
+            'renderers' => [
+                'mustache' => 'yii\mustache\ViewRenderer'
+            ]
+        ]
     ],
     'params' => $params,
     'modules' =>[

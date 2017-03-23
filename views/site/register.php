@@ -13,7 +13,6 @@ use yii\widgets\ActiveForm;
 
 
 $this->title = 'Register';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="site-login">

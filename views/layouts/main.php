@@ -20,6 +20,11 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <?= Html::jsFile('http://code.jquery.com/jquery-1.9.1.min.js'); ?>
+    <?= Html::jsFile('//canjs.com/release/2.0.5/can.jquery.js'); ?>
+    <?= Html::jsFile('//canjs.com/release/2.1.4/can.fixture.js'); ?>
+    <?= Html::jsFile('https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.js'); ?>
+    <?= Html::jsFile('https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js'); ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
