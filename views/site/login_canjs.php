@@ -56,10 +56,7 @@
                 url: '/web/site/login_canjs/',
                 success: function(document) {
                     if (document.status == 'success' &&  document.redirect) {
-                        can.route(document.redirect).ready();
-                    }
-                    if (document.status == 'error') {
-                        $('#login-button').addClass('disabled');
+                        window.location.href = document.redirect;
                     }
                     var data = new can.Map(document);
                     $('#app').html(can.view('app-template', data));
