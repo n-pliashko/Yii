@@ -28,7 +28,7 @@ class RegisterForm extends Model
         $validator = new EmailValidator();
         if ($validator->validate($this->email, $error)) {
             if (!$this->hasErrors()) {
-                if (!empty(Customer::findByEmail($this->email))) {
+                if (!empty(Customers::findByEmail($this->email))) {
                     $this->addError($attribute, 'User with such email already registry. Please logged');
                 }
             }
@@ -40,7 +40,7 @@ class RegisterForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = Customer::findByEmail($this->email);
+            $this->_user = Customers::findByEmail($this->email);
         }
         return $this->_user;
     }
@@ -48,7 +48,7 @@ class RegisterForm extends Model
     public function register()
     {
         if ($this->validate()) {
-            $user = new Customer();
+            $user = new Customers();
             $user->setAttributes((array)$this);
             return $user->save();
         }

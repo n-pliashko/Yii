@@ -1,14 +1,14 @@
 <?php
 
-use app\models\Customer;
+use app\models\Customers;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * Add Customer UI.
+ * Add Customers UI.
  *
  * @var View $this
- * @var Customer $customer
+ * @var Customers $customer
  */
 
 

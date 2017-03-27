@@ -2,9 +2,9 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Customer */
+/* @var $model app\models\Customers */
 
-$this->title = 'Create Customer';
+$this->title = 'Create Customers';
 $this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['customers']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

@@ -5,7 +5,7 @@ namespace app\controllers;
 use app\models\LoginForm;
 use app\models\UserRule;
 use Yii;
-use app\models\Customer;
+use app\models\Customers;
 use app\models\CustomerSearch;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
@@ -16,7 +16,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * SiteController implements the CRUD actions for Customer model.
+ * SiteController implements the CRUD actions for Customers model.
  */
 class SiteController extends Controller
 {
@@ -133,7 +133,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Lists all Customer models.
+     * Lists all Customers models.
      * @return mixed
      */
     public function actionIndex()
@@ -158,7 +158,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays a single Customer model.
+     * Displays a single Customers model.
      * @param integer $id
      * @return mixed
      */
@@ -174,7 +174,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Creates a new Customer model.
+     * Creates a new Customers model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
@@ -184,7 +184,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new Customer();
+        $model = new Customers();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -196,7 +196,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Updates an existing Customer model.
+     * Updates an existing Customers model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -219,7 +219,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Deletes an existing Customer model.
+     * Deletes an existing Customers model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -236,15 +236,15 @@ class SiteController extends Controller
     }
 
     /**
-     * Finds the Customer model based on its primary key value.
+     * Finds the Customers model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Customer the loaded model
+     * @return Customers the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Customer::findOne($id)) !== null) {
+        if (($model = Customers::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -314,7 +314,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $customer = new Customer();
+        $customer = new Customers();
 //        $customer = new RegisterForm();
         if ($customer->load(Yii::$app->request->post()) && $customer->register()) {
             Yii::$app->user->login($customer, 0);
@@ -327,7 +327,7 @@ class SiteController extends Controller
 
         $this->view->title = 'Register';
         $this->view->params['breadcrumbs'][] = $this->view->title;
-        return $this->render('register.mustache' , compact('customer'));
+        return $this->render('register' , compact('customer'));
     }
 
 
@@ -348,7 +348,7 @@ class SiteController extends Controller
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Customer::find()->orderBy('created DESC'),
+            'query' => Customers::find()->orderBy('created DESC'),
             'pagination' => [
                 'pagesize' => 5,
             ],
