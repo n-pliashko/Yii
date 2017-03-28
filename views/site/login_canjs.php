@@ -1,10 +1,10 @@
 <div id="app"></div>
-<script  type="text/mustache" id="app-template">
+<script  type="text/mustache"  can-autorender id="app-template">
 <div class="site-login">
     <h1>{{customer.title}}</h1>
     <p>Please fill out the following fields to login:</p>
     <form id="login-form" class="form-horizontal" data-toggle="validator">
-        <input type="hidden" name="_csrf" value="{{app.request.getCsrfToken()}}" />
+        <input type="hidden" name="_csrf" value="{{#_csrf}}{{_csrf}}{{else}}{{app.request.getCsrfToken()}}{{/_csrf}}" />
         <div class="form-group field-loginform-email">
             <label class="col-lg-1 control-label" for="loginform-email">Email</label>
             <div class="col-lg-3">
@@ -42,12 +42,10 @@
 </div>
 </script>
 <script>
-    $('#app').html(can.view('app-template', {}));
-
     var Login = can.Control.extend({
-        "submit" : function(el, e) {
-            e.preventDefault();
-            e.stopPropagation();
+        "#login-button click" : function(el, e) {
+            if (el.hasClass('disabled')) return false;
+            console.log('submit');
             values = can.deparam(this.element.serialize());
             can.ajax({
                 type: 'POST',
@@ -60,11 +58,14 @@
                     }
                     var data = new can.Map(document);
                     $('#app').html(can.view('app-template', data));
+                    var control = new Login('#login-form');
                 }
             });
+            return false;
         }
     });
 
+    $('#app').html(can.view('app-template', {}));
     var control = new Login('#login-form');
-    can.route.ready();
+   can.route.ready();
 </script>

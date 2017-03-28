@@ -298,8 +298,9 @@ class SiteController extends Controller
         $this->view->params['breadcrumbs'][] = $this->view->title;
         return Json::encode([
             'status' => 'error',
-            'model' => $model,
-            'error' => Yii::$app->request->getIsPost() ?  'Incorrect email or password' : '',
+            'model'  => $model,
+            '_csrf'    => Yii::$app->request->getCsrfToken(),
+            'error'  => Yii::$app->request->getIsPost() ?  'Incorrect email or password' : '',
         ]);
     }
 
@@ -318,10 +319,8 @@ class SiteController extends Controller
 
         $customer = new Customers();
         $customer->scenario = 'register';
-//        $customer = new RegisterForm();
         if ($customer->load(Yii::$app->request->post()) && $customer->save()) {
             Yii::$app->user->login($customer, 0);
-//            Yii::$app->user->login($customer->getUser(), 0);
             $auth = \Yii::$app->authManager;
             $userRole = $auth->getRole($customer->role);
             $auth->assign($userRole, $customer->id);
