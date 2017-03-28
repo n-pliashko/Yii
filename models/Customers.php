@@ -4,8 +4,10 @@ namespace app\models;
 use Yii;
 use ReflectionClass;
 use yii\base\Model;
+use yii\base\ModelEvent;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
+use yii\db\mssql\PDO;
 use yii\db\QueryInterface;
 use yii\helpers\VarDumper;
 use yii\web\IdentityInterface;
@@ -15,7 +17,6 @@ class Customers extends Model implements IdentityInterface
 {
     public $id;
     public $password_repeat;
-    public $rememberMe = true;
     public $auth_key;
     public $created;
     public $name;
@@ -23,11 +24,16 @@ class Customers extends Model implements IdentityInterface
     public $password;
     public $role;
 
+    private $_oldAttributes = [];
+
     public static function tableName()
     {
         return 'customers';
     }
 
+    public function getIsNewRecord() {
+        return empty($this->id);
+    }
 
     public function rules()
     {
@@ -35,7 +41,7 @@ class Customers extends Model implements IdentityInterface
             ['id', 'number'],
             [['email', 'password'], 'required'],
             ['email', 'email'],
-            ['email', 'existEmail'],
+            ['email', 'existEmail', 'on' => 'register'],
             ['name', 'string', 'max' => 50],
             ['password', 'string', 'min' => 8, 'max' => 255],
             ['auth_key', 'string', 'max' => 255],
@@ -43,6 +49,29 @@ class Customers extends Model implements IdentityInterface
             ['password_repeat', 'safe'],
             ['role', 'in', 'range' => array('user','admin')],
         ];
+    }
+
+    public function setAttributes($values, $safeOnly = true)
+    {
+        if (is_array($values)) {
+            $attributes = array_flip($safeOnly ? $this->safeAttributes() : $this->attributes());
+            foreach ($values as $name => $value) {
+                if (isset($attributes[$name])) {
+                    $this->_oldAttributes[$name] = $this->$name;
+                    $this->$name = $value;
+                } elseif ($safeOnly) {
+                    $this->onUnsafeAttribute($name, $value);
+                }
+            }
+        }
+    }
+
+    public function getAllAttributes()
+    {
+        $attributes = parent::getAttributes();
+        $tableSchema = Yii::$app->db->getTableSchema(static::tableName());
+        $attr = array_fill_keys(array_values($tableSchema->getColumnNames()), null);
+        return array_intersect_key($attributes, $attr);
     }
 
     public function getId()
@@ -55,14 +84,28 @@ class Customers extends Model implements IdentityInterface
         return static::findOne(['id' => $id]);
     }
 
-    public function beforeSave($insert)
+    public function beforeSave()
     {
-        $return = parent::beforeSave($insert);
         if ($this->isAttributeChanged('password'))
             $this->password = Yii::$app->security->generatePasswordHash($this->password);
-        if ($this->isNewRecord)
+        if ($this->isNewRecord) {
             $this->auth_key = Yii::$app->security->generateRandomString($length = 20);
-        return $return;
+            $this->created = date('Y-m-d H:i:s');
+            $this->role = 'user';
+        }
+    }
+
+    public function isAttributeChanged($name, $identical = true)
+    {
+        if (isset($this->{$name}, $this->_oldAttributes[$name])) {
+            if ($identical) {
+                return $this->{$name} !== $this->_oldAttributes[$name];
+            } else {
+                return $this->{$name} != $this->_oldAttributes[$name];
+            }
+        } else {
+            return isset($this->{$name}) && isset($this->_oldAttributes[$name]);
+        }
     }
 
     public function validatePassword($password)
@@ -96,27 +139,37 @@ class Customers extends Model implements IdentityInterface
             ->where($array)
             ->createCommand()
             ->queryOne();
-        $customer = new Customers();
-        $customer->setAttributes($rows, false);
-        return $customer;//new Customers($rows);
-    }
-
-
-    public function register()
-    {
-        if ($this->validate()) {
-            return Yii::$app->db->createCommand()->insert(self::tableName(), $this->getAttributes())->execute();
-        }
-        return false;
+        return !$rows ? null : new Customers($rows);
     }
 
     public function existEmail($attribute, $params)
     {
         if (!$this->hasErrors()) {
             if (!empty(static::findByEmail($this->email))) {
-                $this->addError($attribute, 'User with such email already registry. Please logged');
+                $this->addError($attribute, 'User with such email already registry. Please login');
             }
         }
+    }
+
+    public function delete() {
+        return Yii::$app->db->createCommand()->delete(static::tableName(), ['id' => $this->id])->execute();
+    }
+
+    public function save() {
+        if ($this->validate()) {
+            $this->beforeSave();
+            $command = Yii::$app->db->createCommand();
+            $attr = $this->getAllAttributes();
+            if ($this->isNewRecord) {
+                $result = $command->insert(self::tableName(), $attr)->execute();
+                $last_id = Yii::$app->db->getLastInsertID();
+                $this->setAttributes(static::findOne(['id' => $last_id])->getAttributes());
+            } else {
+                $result = $command->update(self::tableName(), $attr, ['id' => $this->id])->execute();
+            }
+            return $result;
+        }
+        return false;
     }
 
 }

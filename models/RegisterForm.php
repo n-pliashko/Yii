@@ -29,7 +29,7 @@ class RegisterForm extends Model
         if ($validator->validate($this->email, $error)) {
             if (!$this->hasErrors()) {
                 if (!empty(Customers::findByEmail($this->email))) {
-                    $this->addError($attribute, 'User with such email already registry. Please logged');
+                    $this->addError($attribute, 'User with such email already registry. Please login');
                 }
             }
         } else {

@@ -11,9 +11,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <h1><?= Html::encode($this->title); ?></h1>
         <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
-        <p>
-                <?= Html::a('Create Customers',['create'],['class' => 'btn btn-success']); ?>
-            </p>
+       
+    <?php if (Yii::$app->user->can('create')): ?>
+         <p>
+            <?= Html::a('Create Customers',['create'],['class' => 'btn btn-success']); ?>
+        </p>
+    <?php endif; ?>
+
         <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -28,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view} {update} {delete}',
                 'visibleButtons' => [
                     'update' => function ($model, $key, $index) {
-                        return Yii::$app->user->can('updateOwn', ['post' => $model->id]);
+                        return Yii::$app->user->can('updateOwn', ['post' => $key]) || Yii::$app->user->can('update');
                     },
                     'delete' => function ($model, $key, $index) {
                         return Yii::$app->user->can('delete');

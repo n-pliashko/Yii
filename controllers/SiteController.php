@@ -8,6 +8,7 @@ use Yii;
 use app\models\Customers;
 use app\models\CustomerSearch;
 use yii\data\ActiveDataProvider;
+use yii\db\Query;
 use yii\helpers\Json;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
@@ -113,6 +114,7 @@ class SiteController extends Controller
             $auth->addChild($admin, $delete);
             $auth->addChild($admin, $create);
             $auth->addChild($admin, $user);
+            $auth->addChild($admin, $updateOwn);
         }
     }
 
@@ -203,7 +205,7 @@ class SiteController extends Controller
      */
     public function actionUpdate($id)
     {
-        if (!Yii::$app->user->can('updateOwn', ['post' => $id])) {
+        if (!Yii::$app->user->can('updateOwn', ['post' => $id]) && !Yii::$app->user->can('update')) {
             return $this->goHome();
         }
 
@@ -244,7 +246,7 @@ class SiteController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Customers::findOne($id)) !== null) {
+        if (($model = Customers::findOne(['id' => $id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -315,14 +317,15 @@ class SiteController extends Controller
         }
 
         $customer = new Customers();
+        $customer->scenario = 'register';
 //        $customer = new RegisterForm();
-        if ($customer->load(Yii::$app->request->post()) && $customer->register()) {
+        if ($customer->load(Yii::$app->request->post()) && $customer->save()) {
             Yii::$app->user->login($customer, 0);
 //            Yii::$app->user->login($customer->getUser(), 0);
             $auth = \Yii::$app->authManager;
             $userRole = $auth->getRole($customer->role);
             $auth->assign($userRole, $customer->id);
-            return $this->goBack('/thank_register');
+            return $this->goBack('/web/site/thank_register');
         }
 
         $this->view->title = 'Register';
@@ -348,7 +351,10 @@ class SiteController extends Controller
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Customers::find()->orderBy('created DESC'),
+            'query' => (new Query())
+                ->from(Customers::tableName())
+                ->indexBy('id')
+                ->orderBy('created DESC'),
             'pagination' => [
                 'pagesize' => 5,
             ],
