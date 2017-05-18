@@ -21,7 +21,17 @@ $this->title = 'Register';
     <p>Please fill out the following fields to register:</p>
 
 <?php
-$form = ActiveForm::begin([
+
+$V8Js = new \V8Js();
+$V8Js->executeString(sprintf("%s; print(ReactDOMServer.renderToString(React.createElement(Register, %s)));",
+     "var console = {warn: function(){}, error: print};var global = global || this, self = self || this, window = window || this;" .
+     file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"). ';' .
+     file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-with-addons.js"). ';' .
+     file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"). ';' .
+     file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom-server.js"). ';' .
+     file_get_contents(Yii::getAlias('@webroot/js/register.js')), json_encode(['customer' => $customer, '_csrf' => Yii::$app->request->getCsrfToken()])));
+
+/*$form = ActiveForm::begin([
     'id' => 'register-form',
     'options' => ['class' => 'form-horizontal'],
     'fieldConfig' => [
@@ -33,16 +43,16 @@ $form = ActiveForm::begin([
 echo $form->field($customer, 'name')->hint('Please enter your name')->label('Name');
 echo $form->field($customer, 'email');
 echo $form->field($customer, 'password')->passwordInput();
-echo $form->field($customer, 'password_repeat')->passwordInput();
+echo $form->field($customer, 'password_repeat')->passwordInput();*/
 
 ?>
 
-    <div class="form-group">
+    <!--div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
             <?= Html::submitButton('Register', ['class' => 'btn btn-primary', 'name' => 'register-button']) ?>
             <?= Html::a('Login', '/web/site/login') ?>
         </div>
-    </div>
+    </div-->
 
-    <?php ActiveForm::end(); ?>
+    <?php //ActiveForm::end(); ?>
 </div>

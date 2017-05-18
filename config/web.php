@@ -53,7 +53,7 @@ $config = [
             'renderers' => [
                 'mustache' => 'yii\mustache\ViewRenderer'
             ]
-        ]
+        ],
     ],
     'params' => $params,
     'modules' =>[
