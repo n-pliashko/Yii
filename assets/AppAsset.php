@@ -28,14 +28,14 @@ class AppAsset extends AssetBundle
         "https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js",
         "https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js",
         "https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom-server.js",
-        '//fb.me/JSXTransformer-0.13.1.js',
+        "https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"
 //        "https://unpkg.com/react@15/dist/react.min.js",
 //        "https://unpkg.com/react-dom@15/dist/react-dom.js",
 //        "https://unpkg.com/react-dom@15/dist/react-dom-server.js"
     ];
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset'
+       /* 'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset'*/
     ];
     public $jsOptions = ['position' => View::POS_HEAD];
 }

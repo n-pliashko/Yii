@@ -30,3 +30,7 @@ class TableComponent extends React.Component {
       DOM.table(null, DOM.tbody(null, rows)));
   }
 }
+
+class TestComponent extends React.Component {
+  render() { return (`<div>Hello World</div>`); }
+}

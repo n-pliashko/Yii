@@ -75,47 +75,37 @@ AppAsset::register($this);
             array(7, 8, 9)
         ));
 
-    $V8Js = new \V8Js();
-    /*$js = sprintf(
-        "%s; print(ReactDOMServer.renderToString(React.createElement(%s, %s)));",
-        "var console = {warn: function(){}, error: print};var global = global || this, self = self || this, window = window || this;" . file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom-server.js"). ';' .
-        file_get_contents(Yii::getAlias('@webroot/js/table.js')), 'Table',
-        json_encode($data));*/
-   /* $V8Js->executeString(sprintf("%s; print(ReactDOMServer.renderToString(React.createElement(TableComponent, %s)));",
-        "var console = {warn: function(){}, error: print};var global = global || this, self = self || this, window = window || this;" .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-with-addons.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom-server.js"). ';' .
-        file_get_contents(Yii::getAlias('@webroot/js/table.js')), json_encode($data)));*/
 
-  $rjs = new \ReactJS(
-          file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-with-addons.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"). ';' .
-        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom-server.js"). ';',
-        file_get_contents(Yii::getAlias('@webroot/js/table.js')));
-    $data =
-        array('data' => array(
-            array(1, 2, 3),
-            array(4, 5, 6),
-            array(7, 8, 9)
-        ));
-    $rjs->setComponent('TableComponent', $data);
+    $react_source = implode("\n", [
+        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.2/babel.js"),
+        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-with-addons.js"),
+        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"),
+        //file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"),
+       // file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"),
+        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom-server.js")
+    ]);
+
+    $react_app = implode("\n", [
+        file_get_contents(Yii::getAlias("@webroot").'/js/test.jsx')
+    ]);
+
+    $react = array();
+    // stubs, react
+    $react[] = "var console = {warn: function(){}, error: print}";
+    $react[] = "var global = global || this, self = self || this, window = window || this";
+    $react[] = $react_source;
+    $react[] = "var React = global.React";
+    $react[] = "var ReactDOMServer = global.ReactDOMServer";
+    $react[] = $react_app;
+
+    $concatenated = implode(";\n", $react);
+
+    $v8 = new \V8Js();
+
+    $v8->executeString($concatenated);
+
+    $js = $v8->executeString(sprintf("ReactDOMServer.renderToString(React.createElement(%s))", 'CommentBox'));
     ?>
-
-    <div id="page"><?php //echo $rjs->getMarkup(); ?></div>
-
-    <script>
-      // client init/render
-      // this is a straight echo of the JS because the JS resources
-      // were loaded synchronously
-      // You may want to load JS async and wrap the return of getJS()
-      // in a function you can call later
-      <?php echo $rjs->getJS('#page', "GLOB"); ?>
-    </script>
 
 </div>
 
