@@ -39,7 +39,7 @@ class Customers extends Model implements IdentityInterface
     {
         return [
             ['id', 'number'],
-            [['email', 'password'], 'required'],
+            [['email', 'password'], 'required', 'on' => ['login', 'register']],
             ['email', 'email'],
             ['email', 'existEmail', 'on' => 'register'],
             ['name', 'string', 'max' => 50],
@@ -104,7 +104,7 @@ class Customers extends Model implements IdentityInterface
                 return $this->{$name} != $this->_oldAttributes[$name];
             }
         } else {
-            return isset($this->{$name}) && isset($this->_oldAttributes[$name]);
+            return isset($this->{$name}) && !isset($this->_oldAttributes[$name]);
         }
     }
 
@@ -131,6 +131,11 @@ class Customers extends Model implements IdentityInterface
     public static function findByEmail($email)
     {
        return static::findOne(['email' => $email]);
+    }
+
+    public static function find() {
+        return (new Query())
+            ->from(self::tableName());
     }
 
     public static function findOne($array) {

@@ -271,8 +271,9 @@ class SiteController extends Controller
 
         $this->view->title = 'Login';
         $this->view->params['breadcrumbs'][] = $this->view->title;
-        return $this->render('login_canjs', [
+        return $this->render('login_canjs.mustache', [
             'model' => $model,
+            '_csrf'    => Yii::$app->request->getCsrfToken(),
             'error' => Yii::$app->request->getIsPost() ?  'Not exist such user' : '',
         ]);
     }

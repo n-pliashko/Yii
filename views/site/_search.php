@@ -17,23 +17,23 @@ use yii\jui\DatePicker;
     <?= $form->field($model, 'name') ?>
     <?= $form->field($model, 'email') ?>
     <?php echo '<label class="control-label">Created</label><br>';?>
-    <?php echo DatePicker::widget([
+    <?php /*echo DatePicker::widget([
         'model' => $model,
         'attribute' => 'created',
         'dateFormat' => 'yyyy-MM-dd',
         'options' => [
                 'class' => 'form-control'
         ],
-    ]);?>
-    <?php /*echo DateTimePicker::widget([
+    ]);*/?>
+    <?php echo DateTimePicker::widget([
         'name'=> 'created',
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'value' => $model->created,
         'pluginOptions' => [
             'autoclose' => true,
-            'format' => 'dd-M-yyyy'
+            'format' => 'dd-mm-yyyy h:i:s'
         ]
-    ]); */?>
+    ]); ?>
     <?php echo $form->field($model, 'role') ?>
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
